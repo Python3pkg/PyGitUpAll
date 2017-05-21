@@ -24,18 +24,18 @@ class GitUpAll(object):
     def git_up_all(self, sourcetree=False):
 
         if sourcetree:
-            print(colored("Loading projects from ", attrs=["bold"]) + colored("SourceTree" + "\n", color="green"))
+            print((colored("Loading projects from ", attrs=["bold"]) + colored("SourceTree" + "\n", color="green")))
             projects = read_projects_from_sourcetree()
         else:
-            print(colored("Loading projects from ", attrs=["bold"]) + colored(PROJECTS_FILE + "\n", color="green"))
+            print((colored("Loading projects from ", attrs=["bold"]) + colored(PROJECTS_FILE + "\n", color="green")))
             projects = read_projects_from_json(PROJECTS_FILE)
 
         if not projects:
-            print(colored("Could not read projects\n", color="red"))
+            print((colored("Could not read projects\n", color="red")))
             return False
 
         results = {}
-        for project_name, project_settings in projects.iteritems():
+        for project_name, project_settings in projects.items():
 
             """
             This needs to be rewritten and tested!
@@ -43,20 +43,20 @@ class GitUpAll(object):
             # Check if we are able to initialize settings to an object
             project = Project(project_settings)
             if not project:
-                print (colored("Could not read project " + project_name, color="red"))
+                print((colored("Could not read project " + project_name, color="red")))
                 continue
-            print(colored("- Working on: " + project.name + " @" + project.absolute_path, attrs=["underline"]))
+            print((colored("- Working on: " + project.name + " @" + project.absolute_path, attrs=["underline"])))
 
             # Check if a dir exists or clone
             if (not os.path.isdir(project.absolute_path) or os.listdir(
                     project.absolute_path) == []) and project.git_url:
                 print ("Project is not directory or not initialized repo. Cloning from url")
                 project.repo = Repo.clone_from(url=project.git_url, to_path=project.absolute_path)
-                print (colored("Repository cloned", color="green"))
+                print((colored("Repository cloned", color="green")))
 
             # Check if the is not git and if not skip
             if not is_git_dir(os.path.join(project.absolute_path, ".git")) and not project.git_url:
-                print (colored("Project path is not a git dir and has no info. Skipping", color="red"))
+                print((colored("Project path is not a git dir and has no info. Skipping", color="red")))
                 continue
 
             # @todo probably should be moved
@@ -64,7 +64,7 @@ class GitUpAll(object):
                 results.update({project.name: True})
             else:
                 results.update({project.name: False})
-            print(colored("- Finished on: " + project.name + " @" + project.absolute_path, attrs=["underline"]) + "\n")
+            print((colored("- Finished on: " + project.name + " @" + project.absolute_path, attrs=["underline"]) + "\n"))
 
         self.print_results(results)
 
@@ -79,7 +79,7 @@ class GitUpAll(object):
             GitUp().run()
             result = True
         except (GitError, exc.GitCommandError, BaseException) as e:
-            print (colored("Could not update repository: " + project.name, color="red"))
+            print((colored("Could not update repository: " + project.name, color="red")))
         finally:
             os.chdir(self.start_dir)
             return result
@@ -89,19 +89,19 @@ class GitUpAll(object):
         total = len(results)
         successes = 0
         fails = 0
-        for name, success in results.iteritems():
+        for name, success in results.items():
             if success:
-                print (name + colored(" Updated", color="green"))
+                print((name + colored(" Updated", color="green")))
                 successes += 1
             else:
-                print (name + colored(" Failed", color="red"))
+                print((name + colored(" Failed", color="red")))
                 fails += 1
 
-        print(colored("Total: " + str(total) + " projects", attrs=['bold'], color="green"))
-        print(colored("Successful: " + str(successes) + " projects", attrs=['bold'], color="green"))
-        print(colored("Fails: " + str(fails) + " projects", attrs=['bold'], color="red"))
-        print(colored("Ratio: " + str(float(successes) / float(total) * 100.0)[:4] + "% success", attrs=['underline'],
-                      color="green"))
+        print((colored("Total: " + str(total) + " projects", attrs=['bold'], color="green")))
+        print((colored("Successful: " + str(successes) + " projects", attrs=['bold'], color="green")))
+        print((colored("Fails: " + str(fails) + " projects", attrs=['bold'], color="red")))
+        print((colored("Ratio: " + str(float(successes) / float(total) * 100.0)[:4] + "% success", attrs=['underline'],
+                      color="green")))
 
 
 def run():

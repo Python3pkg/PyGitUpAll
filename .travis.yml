@@ -1,22 +1,47 @@
-language: python
+os:
+  - linux
 python:
   - "2.7"
-  - "2.6"
+  - "3.6"
+  - "nightly" # currently points to 3.7-dev
 
-# command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
+dist: trusty
+sudo: required
+language: python
+
+
+before_install:
+  # Show build setup
+  - uname -a
+  - cat /etc/os-release
+  - pwd
+  - free -tm
+  - python --version
+  - git --version
+  - pip install -r requirements.txt
+
 install:
-  # Setup of Git environment
-  - git config --global user.email \<\>
-  - git config --global user.name "Travis CI"
-
-  # Setup of Python environment
+  # git describe requires complete history
+  # - travis_retry git fetch --unshallow
+  - python setup.py install
   - pip install -r dev-requirements.txt --use-mirrors
   - pip install -r requirements.txt --use-mirrors
   - python setup.py develop
   - pip install coveralls
 
-# command to run tests, e.g. python setup.py test
-script: nosetests -v --with-coverage --cover-package=PyGitUpAll
+script: 
+  - python helpTest.py | grep Bat-belt
+  - nosetests -v --with-coverage --cover-package=PyGitUpAll
+
 
 after_success:
   - coveralls
+  - echo "OK, all done."
+
+notifications:
+  email:
+    recipients:
+      - ralic.lo.eng@ieee.org
+    on_success: always # default: change
+    on_failure: never # default: always
+

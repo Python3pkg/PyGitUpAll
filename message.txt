@@ -1,0 +1,9 @@
+Name: git-up-all
+Version: 0.3.2.6
+Summary: Run git-up through a json list of repos
+Home-page: https://github.com/jimmykane/PyGitUpAll
+Author: Dimitrios Kanellopoulos
+Author-email: jimmykane9@gmail.com
+License: GPLv3
+Location: /usr/local/lib/python3.6/site-packages/git_up_all-0.3.2.6-py3.6.egg
+Requires: GitPython, git-up, biplist, termcolor, colorama
